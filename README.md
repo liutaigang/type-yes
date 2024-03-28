@@ -1,6 +1,10 @@
-Ty 是个极简的 Javascript 类型判断库
+Ty（type-yes） 是个极简的 Javascript 类型判断库
 
 A minimalist library for determining the datatype of Javascript variables
+
+``` bash
+npm install type-yes
+```
 
 
 
@@ -203,14 +207,6 @@ const isEmpty = Ty(value).empty.is // value = []
 ```js
 const isIterator = Ty(value).array.map.set.or
 cosnt isPrimitive = Ty(value).null.undefined.boolean.number.string.bigint.symbol.or
-```
-
-
-
-## 📦 Install
-
-```bash
-npm install ty
 ```
 
 
