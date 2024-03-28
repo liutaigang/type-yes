@@ -1,0 +1,56 @@
+{
+  "name": "type-yes",
+  "version": "1.0.0",
+  "author": "liutaigang",
+  "description": "A library for determining the datatype of Javascript variables.",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.esm.js",
+  "typings": "./dist/index.d.ts",
+  "keywords": [
+    "Javascript"
+  ],
+  "license": "ISC",
+  "files": [
+    "dist/",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:liutaigang/ty.git"
+  },
+  "scripts": {
+    "test": "vitest",
+    "build": "rimraf dist/ && run-p build:esm build:cjs build:dts",
+    "build:esm": "rollup -c --environment NODE_ENV:esm",
+    "build:cjs": "rollup -c --environment NODE_ENV:cjs",
+    "build:dts": "rollup -c --environment NODE_ENV:dts",
+    "clean": "rimraf dist/ & rimraf node_modules/",
+    "prettier": "prettier . --write",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@types/node": "^20.11.30",
+    "@vitest/coverage-v8": "^1.3.1",
+    "dts-bundle-generator": "^9.1.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.0.3",
+    "rimraf": "^5.0.5",
+    "rollup": "^4.9.1",
+    "rollup-merge-config": "^0.0.12",
+    "rollup-plugin-dts": "^6.1.0",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "typescript": "^5.1.6",
+    "vite": "^5.2.6",
+    "vitest": "^1.3.1"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  }
+}
