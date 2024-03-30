@@ -6,7 +6,7 @@ npm install type-yes
 
 ## 🚀 About
 
-首先通过一个例子来认识下，Ty——方法的入参类型判断，如：
+首先通过一个例子来认识下 Ty —— 方法的入参类型判断，如：
 
 ```js
 function func(value) {
