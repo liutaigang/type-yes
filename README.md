@@ -1,16 +1,12 @@
-Ty（type-yes） 是个极简的 Javascript 类型判断库
-
-A library for determining the datatype of Javascript variables
+Ty（type-yes） 是个极简的 Javascript 类型判断库（A library for determining the datatype of Javascript variables）
 
 ``` bash
 npm install type-yes
 ```
 
-
-
 ## 🚀 About
 
-首先通过一个例子来认识下 Ty。方法的入参类型判断是一种频繁的操作，如：
+首先通过一个例子来认识下，Ty——方法的入参类型判断，如：
 
 ```js
 function func(value) {
@@ -278,7 +274,23 @@ typeof value01 === 'object' && typeof value02 != 'number'
 在 Ty 中，可以对单个类型标识符进行否运算：! + 类型标识符，如：
 
 ```js
-Ty(value01, value02).obj['!num'].and
+Ty({}, 123).obj['!num'].and // false
+Ty({}, 'abc').obj['!num'].and // true
+```
+
+### 类型标识符的“可为空运算“
+
+如何使用 Ty 实现下面这样一个类型判断：
+
+```js
+typeof value01 === 'object' && (typeof value02 === 'number' || value02 == null)
+```
+
+在 Ty 中，可以对单个类型标识符进行可为空运算：? + 类型标识符，如：
+
+```js
+Ty({}, 123).obj['?num'].and // true
+Ty({}, null).obj['?num'].and // true
 ```
 
 
