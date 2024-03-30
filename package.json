@@ -29,9 +29,12 @@
     "build:dts": "rollup -c --environment NODE_ENV:dts",
     "clean": "rimraf dist/ & rimraf node_modules/",
     "prettier": "prettier . --write",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "commitlint": "commitlint --edit"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.2.1",
+    "@commitlint/config-conventional": "^19.1.0",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@types/node": "^20.11.30",
