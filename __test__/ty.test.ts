@@ -1,60 +1,77 @@
-import { Ty, TypeMatcher, TypeFlag, buildinTypeMatcher } from '../src/ty';
+import { Ty, TypeMatcher, TypeFlag, buildinTypeMatcher, padEnd } from '../src/ty';
+import { describe, it } from 'vitest';
+import { IdentifiableProxy } from '../src/type-build-in';
 
-// type MyType = 'element' | 'finite' | TypeFlag;
-// const typeMather: TypeMatcher<MyType> = (parameter, typeFlag) => {
-//   switch (typeFlag) {
-//     case 'element':
-//       return parameter instanceof Element;
-//     case 'finite':
-//       return Number.isFinite(parameter);
-//     default:
-//       return buildinTypeMatcher(parameter, typeFlag);
-//   }
-// };
+describe('buildinTypeMatcher', () => {
+  it('bool', ({ expect }) => expect(buildinTypeMatcher(true, 'bool')).toBeTruthy());
+  it('string', ({ expect }) => expect(buildinTypeMatcher('123', 'string')).toBeTruthy());
+  it('NaN', ({ expect }) => expect(buildinTypeMatcher(NaN, 'NaN')).toBeTruthy());
+  it('!bool', ({ expect }) => expect(buildinTypeMatcher('', '!bool')).toBeTruthy());
+});
 
-// const arr = ['a', 'b', 'c'];
-// const arrProxy = new IdentifiableProxy(arr, {});
-// console.log(Object.prototype.toString.call(arrProxy)); // Proxy
+describe('padEnd', () => {
+  const originArr = [1, 2, 3];
+  const targetArr = [1, 2, 3, 3, 3, 3];
+  it('padEnd', ({ expect }) => expect(padEnd(originArr, targetArr.length)).toEqual(targetArr));
+});
 
-// console.log(Ty(arrProxy).proxy.is);
-// console.log(Ty(arrProxy).arr.proxy.and);
+describe('Ty()', () => {
+  const arr = ['a', 'b', 'c'];
+  const xnum = 123;
+  const xobj = {};
+  const xarr = [];
+  const xstr = '123';
 
-// console.log('---------------------not------------------------');
-// console.log(typeof xnum === 'number');
-// console.log(Ty(xnum).num.is);
+  // ---------------------proxy------------------------
+  const arrProxy = new IdentifiableProxy(arr, {});
+  it('proxy 01', ({ expect }) => expect(Ty(arrProxy).proxy.is).toBeTruthy());
+  it('proxy 02', ({ expect }) => expect(Ty(arrProxy).arr.proxy.and).toBeTruthy());
 
-// console.log('---------------------or------------------------');
-// console.log(typeof xobj === 'object' || xobj == null);
-// console.log(Ty(xobj).obj.nil.or);
+  // ---------------------not------------------------
+  it('not', ({ expect }) => expect(Ty(xnum).num.is).toBeTruthy());
 
-// console.log('---------------------nor------------------------');
-// console.log(!(typeof xobj === 'object' || xobj == null));
-// console.log(Ty(xobj).arr.obj.undef.null.nor);
+  // ---------------------or------------------------
+  it('or 01', ({ expect }) => expect(Ty(xobj).obj.nil.or).toBeTruthy());
+  it('or 02', ({ expect }) => expect(Ty(xobj).arr.obj.undef.null.or).toBeTruthy());
 
-// console.log('---------------------or------------------------');
-// console.log(typeof xobj === 'object' || xobj == null);
-// console.log(Ty(xobj).arr.obj.undef.null.or);
+  // ---------------------nor------------------------
+  it('nor', ({ expect }) => expect(Ty(xobj).arr.obj.undef.null.nor).toBeFalsy());
 
-// console.log('---------------------nor------------------------');
-// console.log(!(typeof xobj === 'object' || xobj == null));
-// console.log(Ty(xobj).arr.obj.undef.null.nor);
+  // -----------------------and----------------------
+  it('and 01', ({ expect }) => expect(Ty(xobj, xarr, xstr, xnum).obj.arr.str.num.and).toBeTruthy());
 
-// console.log('---------------------or, or------------------------');
-// console.log((typeof xobj === 'object' && !Array.isArray(xobj)) || xobj == null);
-// console.log(Object.prototype.toString.call(xobj) === '[object Object]' || xobj == null);
-// console.log(Ty(xobj).obj.nil.or);
+  const xobj1 = {};
+  const xobj2 = 123;
+  const xobj3 = {};
+  // -----------------------and----------------------
+  it('and 02', ({ expect }) => expect(Ty(xobj, xobj1, xobj2, xobj3).obj.and).toBeFalsy());
 
-// console.log('-----------------------and----------------------');
-// console.log(typeof xobj === 'object' && Array.isArray(xarr) && typeof xstr === 'string' && typeof xnum === 'number');
-// console.log(Ty(xobj, xarr, xstr, xnum).obj.arr.str.num.and);
+  // -----------------------nand----------------------
+  it('nand', ({ expect }) => expect(Ty(xobj, xarr, xstr, xnum).obj.arr.str.num.nand).toBeFalsy());
 
-// const xobj1 = {};
-// const xobj2 = 123;
-// const xobj3 = {};
-// console.log('-----------------------and----------------------');
-// console.log(typeof xobj === 'object' && typeof xobj1 === 'object' && typeof xobj2 === 'object' && typeof xobj3 === 'object');
-// console.log(Ty(xobj, xobj1, xobj2, xobj3).obj.and);
+  // -----------------------!---------------------
+  it('! 01', ({ expect }) => expect(Ty({}, 123).obj['!num'].and).toBeFalsy());
+  it('! 02', ({ expect }) => expect(Ty({}, '').obj['!num'].and).toBeTruthy());
+});
 
-// console.log('-----------------------nand----------------------');
-// console.log(!(typeof xobj === 'object' && Array.isArray(xarr) && typeof xstr === 'string' && typeof xnum === 'number'));
-// console.log(Ty(xobj, xarr, xstr, xnum).obj.arr.str.num.nand);
+describe('new Ty()', () => {
+  type MyType = 'arr_obj_null' | 'finite' | TypeFlag;
+  const typeMather: TypeMatcher<MyType> = (parameter, typeFlag) => {
+    switch (typeFlag) {
+      case 'arr_obj_null':
+        return typeof parameter === 'object';
+      case 'finite':
+        return Number.isFinite(parameter);
+      default:
+        return buildinTypeMatcher(parameter, typeFlag);
+    }
+  };
+  const tty = new Ty(typeMather);
+
+  it('or', ({ expect }) => expect(tty(void 0).arr.obj.undef.null.or).toBeTruthy());
+  it('finite', ({ expect }) => expect(tty(123).finite.is).toBeTruthy());
+  it('arr_obj_null 01', ({ expect }) => expect(tty([]).arr_obj_null.is).toBeTruthy());
+  it('arr_obj_null 02', ({ expect }) => expect(tty({}).arr_obj_null.is).toBeTruthy());
+  it('arr_obj_null 03', ({ expect }) => expect(tty(null).arr_obj_null.is).toBeTruthy());
+  it('finite.arr_obj_null.or', ({ expect }) => expect(tty([]).finite.arr_obj_null.or).toBeTruthy());
+});

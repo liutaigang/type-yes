@@ -1,3 +1,4 @@
+// 所有能通过 Object.prototype.toString.call() 判断的数据类型
 export type BuildInType =
   | 'null'
   | 'undefined'
@@ -71,25 +72,27 @@ const conciseTypeMap = new Map<ConciseType, BuildInType>([
   ['func', 'function'],
 ]);
 
+const toStringTag = (obj: any) => Object.prototype.toString.call(obj).slice(0, -1).split(' ')[1];
+
 /**
  * 作者：Kop
  * 链接：https://juejin.cn/post/6865910564817010702
  */
 export const IdentifiableProxy = new Proxy(Proxy, {
-  construct: function (target, ...args) {
-    const result = new target(...args);
+  construct: function (target, args) {
+    const result = Reflect.construct(target, args);
     const originToStringTag = toStringTag(result);
     result[Symbol.toStringTag] = 'Proxy-' + originToStringTag; // Proxy-Object, Proxy-Proxy-Object, Proxy-Function, ...
     return result;
   },
 });
 
-export const toStringTag = (obj: any): string => {
-  return Object.prototype.toString.call(obj).slice(0, -1).split(' ')[1];
+export const toBuildInType = (obj: any): BuildInType => {
+  return toStringTag(obj).toLowerCase() as BuildInType;
 };
 
 export const matchBuildInType = (parameter: any, typeFlag: BuildInType | ConciseType) => {
-  const stringTag = toStringTag(parameter).toLowerCase();
+  const stringTag = toBuildInType(parameter);
   const fullFlag = conciseTypeMap.get(typeFlag as ConciseType) ?? typeFlag;
 
   const isProxy = stringTag.startsWith('proxy');

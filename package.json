@@ -23,6 +23,7 @@
   },
   "scripts": {
     "test": "vitest",
+    "coverage": "vitest --coverage",
     "build": "rimraf dist/ && run-p build:esm build:cjs build:dts",
     "build:esm": "rollup -c --environment NODE_ENV:esm",
     "build:cjs": "rollup -c --environment NODE_ENV:cjs",

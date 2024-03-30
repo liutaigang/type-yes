@@ -29,7 +29,7 @@ interface TyConstructor {
 
 export const buildinTypeMatcher: TypeMatcher<TypeFlag | string> = (parameter, typeFlag) => {
   const isNot = typeFlag.startsWith(NOT_PREFIX);
-  const pureFlog = isNot ? typeFlag.slice(1).toLowerCase() : typeFlag.toLowerCase();
+  const pureFlog = isNot ? typeFlag.slice(1) : typeFlag;
 
   const isBuildInType = matchBuildInType(parameter, pureFlog as BuildInType | ConciseType);
   const isSpecialType = matchSpecialType(parameter, pureFlog as SpecialType);
@@ -94,7 +94,7 @@ export const Ty = new Proxy(
   },
 ) as TyConstructor;
 
-function padEnd<T>(arr: T[], len: number) {
+export function padEnd<T>(arr: T[], len: number) {
   let arrLen = arr.length;
   for (let i = arrLen; i < len; i++) {
     arr.push(arr[arrLen - 1]);
