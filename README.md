@@ -44,7 +44,7 @@ Ty 版的判断是最简单的！！！，但是也会让人有些疑惑——�
 ```
 // 当 value = 123
 
-[[value, 'str'], [value, 'num'], [value, 'nil']] =判断类型=> [false, true, false] =或运算)=> true
+[[value, 'str'], [value, 'num'], [value, 'nil']] =判断类型=> [false, true, false] =或运算=> true
 ```
 
 到了这里，你大概已经了解 Ty 的逻辑符 or 的使用，除了 or ， Ty 还有  is，not，and，nor，nand
