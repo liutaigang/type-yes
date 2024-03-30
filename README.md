@@ -274,6 +274,9 @@ typeof value01 === 'object' && typeof value02 != 'number'
 在 Ty 中，可以对单个类型标识符进行否运算：! + 类型标识符，如：
 
 ```js
+Ty(value01, value02).obj['!num'].and
+
+// 如：
 Ty({}, 123).obj['!num'].and // false
 Ty({}, 'abc').obj['!num'].and // true
 ```
@@ -289,6 +292,9 @@ typeof value01 === 'object' && (typeof value02 === 'number' || value02 == null)
 在 Ty 中，可以对单个类型标识符进行可为空运算：? + 类型标识符，如：
 
 ```js
+// Ty(value01, value02).obj['?num'].and
+
+// 如：
 Ty({}, 123).obj['?num'].and // true
 Ty({}, null).obj['?num'].and // true
 ```
