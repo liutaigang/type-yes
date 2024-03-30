@@ -1,4 +1,5 @@
 export const NOT_PREFIX = '!';
+export const OPTIONAL_PREFIX = '?';
 
 export type LogicalOperator = 'is' | 'not' | 'or' | 'and' | 'nor' | 'nand';
 

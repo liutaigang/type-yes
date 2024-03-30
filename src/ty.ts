@@ -1,4 +1,4 @@
-import { LogicalOperator, NOT_PREFIX, islogicalOperator, logicalOperation } from './logical-operator';
+import { LogicalOperator, NOT_PREFIX, OPTIONAL_PREFIX, islogicalOperator, logicalOperation } from './logical-operator';
 import { BuildInType, ConciseType, matchBuildInType } from './type-build-in';
 import { SpecialType, matchSpecialType } from './type-special';
 
@@ -29,12 +29,17 @@ interface TyConstructor {
 
 export const buildinTypeMatcher: TypeMatcher<TypeFlag | string> = (parameter, typeFlag) => {
   const isNot = typeFlag.startsWith(NOT_PREFIX);
-  const pureFlog = isNot ? typeFlag.slice(1) : typeFlag;
+  const isOptional = typeFlag.startsWith(OPTIONAL_PREFIX);
+
+  const pureFlog = isNot || isOptional ? typeFlag.slice(1) : typeFlag;
 
   const isBuildInType = matchBuildInType(parameter, pureFlog as BuildInType | ConciseType);
   const isSpecialType = matchSpecialType(parameter, pureFlog as SpecialType);
   const isMatch = isBuildInType || isSpecialType;
-  return isNot ? !isMatch : isMatch;
+
+  if (isNot) return !isMatch;
+  if (isOptional) return parameter == null || isMatch;
+  return isMatch;
 };
 
 const proxyHandler: ProxyHandler<object> = {

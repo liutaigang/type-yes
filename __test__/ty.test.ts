@@ -52,8 +52,14 @@ describe('Ty()', () => {
   // -----------------------!---------------------
   it('! 01', ({ expect }) => expect(Ty({}, 123).obj['!num'].and).toBeFalsy());
   it('! 02', ({ expect }) => expect(Ty({}, '').obj['!num'].and).toBeTruthy());
-});
 
+  // -----------------------?---------------------
+  it('? 01', ({ expect }) => expect(Ty({}, []).obj.arr.and).toBeTruthy());
+  it('? 02', ({ expect }) => expect(Ty({}, []).obj['?arr'].and).toBeTruthy());
+  it('? 03', ({ expect }) => expect(Ty({}, {}).obj['?arr'].and).toBeFalsy());
+  it('? 04', ({ expect }) => expect(Ty({}, null).obj['?arr'].and).toBeTruthy());
+  it('? 05', ({ expect }) => expect(Ty({}, undefined).obj['?arr'].and).toBeTruthy());
+});
 describe('new Ty()', () => {
   type MyType = 'arr_obj_null' | 'finite' | TypeFlag;
   const typeMather: TypeMatcher<MyType> = (parameter, typeFlag) => {
