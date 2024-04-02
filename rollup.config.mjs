@@ -4,6 +4,7 @@ import typescript from 'rollup-plugin-typescript2';
 import dts from 'rollup-plugin-dts';
 import merge from 'rollup-merge-config';
 import { readFileSync } from 'fs';
+import terser from '@rollup/plugin-terser';
 
 const pkg = JSON.parse(readFileSync('./package.json'));
 
@@ -11,9 +12,11 @@ const pkg = JSON.parse(readFileSync('./package.json'));
 const jobs = {
   cjs: {
     output: { format: 'cjs', file: pkg.main },
+    plugins: [terser()],
   },
   esm: {
     output: { format: 'esm', file: pkg.module },
+    plugins: [terser()],
   },
   dts: {
     output: { file: pkg.typings, format: 'es' },
