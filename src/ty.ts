@@ -11,13 +11,21 @@ type TyResultFull<T extends string> = {
 } & {
   [key in T]: TyResultFull<T>;
 } & {
-  [key in string]: TyResultFull<T>;
+  // 否运算
+  [key in `${typeof NOT_PREFIX}${T}`]: TyResultFull<T>;
+} & {
+  // 可为空运算
+  [key in `${typeof OPTIONAL_PREFIX}${T}`]: TyResultFull<T>;
 };
 
 type TyResult<T extends string> = {
   [key in T]: TyResultFull<T>;
 } & {
-  [key in string]: TyResultFull<T>;
+  // 否运算
+  [key in `${typeof NOT_PREFIX}${T}`]: TyResultFull<T>;
+} & {
+  // 可为空运算
+  [key in `${typeof OPTIONAL_PREFIX}${T}`]: TyResultFull<T>;
 };
 
 type ProxyTarget = { parameters: any[]; typeFlags?: TypeFlag[]; typeMatcher?: TypeMatcher<TypeFlag> };
