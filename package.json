@@ -1,6 +1,6 @@
 {
   "name": "type-yes",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "liutaigang",
   "description": "A library for determining the datatype of Javascript variables.",
   "main": "./dist/index.cjs.js",
